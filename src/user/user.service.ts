@@ -6,9 +6,9 @@ import { CreateUserDto } from './dto/userDto'
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  getAllUsers() {
-    // 데이터베이스에서 모든 사용자 정보 조회
-    return [{ id: 1, name: 'John Doe' }]
+  async getAllUsers() {
+    const company = await this.prisma.company.findMany()
+    return [company]
   }
 
   async createUser(createUserDto: CreateUserDto) {
