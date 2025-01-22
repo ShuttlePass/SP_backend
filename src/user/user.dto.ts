@@ -1,4 +1,3 @@
-import { user_us_level } from '@prisma/client'
 import { IsString, IsNotEmpty, Length, IsIn, IsInt } from 'class-validator'
 
 export enum us_level {
@@ -19,7 +18,7 @@ export class CreateUserDto {
 
   @IsIn(['manager', 'driver'])
   @IsNotEmpty()
-  us_level: user_us_level
+  us_level: us_level
 
   @IsNotEmpty()
   @IsInt()

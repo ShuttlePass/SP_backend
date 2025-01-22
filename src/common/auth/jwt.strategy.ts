@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { us_level } from 'src/user/user.dto'
 
 export interface JwtPayload {
   us_idx: number
   company_idx: number
-  us_level: string | null
+  us_level: us_level
 }
 
 @Injectable()

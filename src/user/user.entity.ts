@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { us_level } from './user.dto'
 
 @Entity()
 export class User {
@@ -12,7 +13,7 @@ export class User {
   us_password: string
 
   @Column({ type: 'enum', enum: ['manager', 'driver'], nullable: true })
-  us_level: string
+  us_level: us_level
 
   @Column()
   company_idx: number
