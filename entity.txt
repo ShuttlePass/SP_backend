@@ -1,0 +1,316 @@
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Enum } from 'typeorm';
+
+@Entity()
+export class Classes {
+  @PrimaryGeneratedColumn()
+  cl_idx: number;
+
+  @Column()
+  company_idx: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  cl_name: string;
+
+  @Column({ type: 'time' })
+  cl_start_at: string;
+
+  @Column({ type: 'time' })
+  cl_end_at: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class ClassesDay {
+  @PrimaryGeneratedColumn()
+  cd_idx: number;
+
+  @Column()
+  classes_idx: number;
+
+  @Column({
+    type: 'enum',
+    enum: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
+  })
+  cd_day: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class ClassesEnrollment {
+  @PrimaryGeneratedColumn()
+  ce_idx: number;
+
+  @Column()
+  student_idx: number;
+
+  @Column()
+  classes_idx: number;
+
+  @Column({ type: 'date' })
+  ce_date: Date;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class Company {
+  @PrimaryGeneratedColumn()
+  co_idx: number;
+
+  @Column({ type: 'varchar', length: 255, unique: true })
+  co_name: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class CourseReservation {
+  @PrimaryGeneratedColumn()
+  cr_idx: number;
+
+  @Column()
+  course_idx: number;
+
+  @Column()
+  reservation_idx: number;
+
+  @Column({ type: 'int', nullable: true })
+  cr_seq: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class ReservationEnrollment {
+  @PrimaryGeneratedColumn()
+  re_idx: number;
+
+  @Column()
+  reservation_idx: number;
+
+  @Column()
+  enrollment_idx: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class Shuttle {
+  @PrimaryGeneratedColumn()
+  sh_idx: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  sh_name: string;
+
+  @Column()
+  driver_idx: number;
+
+  @Column({ type: 'tinyint' })
+  sh_state: number;
+
+  @Column()
+  sh_max_cnt: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class ShuttleArea {
+  @PrimaryGeneratedColumn()
+  sa_idx: number;
+
+  @Column()
+  shuttle_idx: number;
+
+  @Column()
+  area_idx: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class ShuttleCourse {
+  @PrimaryGeneratedColumn()
+  sc_idx: number;
+
+  @Column()
+  shuttle_idx: number;
+
+  @Column({ type: 'datetime' })
+  sc_arrive_at: Date;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class ShuttleReservation {
+  @PrimaryGeneratedColumn()
+  sr_idx: number;
+
+  @Column()
+  shuttle_idx: number;
+
+  @Column()
+  shuttle_time_idx: number;
+
+  @Column()
+  student_idx: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  sr_address: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  sr_address_memo: string;
+
+  @Column({ type: 'decimal', precision: 9, scale: 6 })
+  sr_address_x: number;
+
+  @Column({ type: 'decimal', precision: 9, scale: 6 })
+  sr_address_y: number;
+
+  @Column({ type: 'tinyint' })
+  sr_state: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class ShuttleTime {
+  @PrimaryGeneratedColumn()
+  st_idx: number;
+
+  @Column({ type: 'time' })
+  st_time: string;
+
+  @Column()
+  company_idx: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class Student {
+  @PrimaryGeneratedColumn()
+  st_idx: number;
+
+  @Column()
+  company_idx: number;
+
+  @Column()
+  area_idx: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  st_name: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  st_contact: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  st_address: string;
+
+  @Column({ type: 'decimal', precision: 9, scale: 6 })
+  st_address_x: number;
+
+  @Column({ type: 'decimal', precision: 9, scale: 6 })
+  st_address_y: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  us_idx: number;
+
+  @Column({ type: 'varchar', length: 255, unique: true })
+  us_id: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  us_password: string;
+
+  @Column({ type: 'enum', enum: ['manager', 'driver'], nullable: true })
+  us_level: string;
+
+  @Column()
+  company_idx: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  us_contact: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  us_name: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
+
+@Entity()
+export class Area {
+  @PrimaryGeneratedColumn()
+  ar_idx: number;
+
+  @Column()
+  company_idx: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  ar_name: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
+}
