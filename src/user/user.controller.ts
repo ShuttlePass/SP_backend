@@ -1,16 +1,19 @@
-import { Controller, Get, Post, Body } from '@nestjs/common'
+import { Controller, Post, Body } from '@nestjs/common'
 import { UserService } from './user.service'
-import { CreateUserDto } from './dto/userDto'
+import { CreateUserDto, LoginUserDto } from './user.dto'
+import { SkipAuth } from 'src/common/auth/SkipAuthDecorator'
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  findAll() {
-    return this.userService.getAllUsers()
+  @SkipAuth()
+  @Post('/login')
+  login(@Body() loginUserDto: LoginUserDto) {
+    return this.userService.login(loginUserDto)
   }
 
+  @SkipAuth()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto)
