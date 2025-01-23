@@ -28,10 +28,10 @@ import { Student } from './student/student.entity'
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'svc.sel4.cloudtype.app', // process.env.DB_HOST,
-      port: 32402, // parseInt(process.env.DB_PORT || '32402', 10),
+      host: 'shuttlepass-db.cekgoqjjacws.ap-northeast-1.rds.amazonaws.com', // process.env.DB_HOST,
+      port: 3306, // parseInt(process.env.DB_PORT || '32402', 10),
       username: 'root', // process.env.DB_USERNAME,
-      password: 'shuttlepassdb123', // process.env.DB_PASSWORD,
+      password: 'YpUlPRV5ZRWZoFMISLGX', // process.env.DB_PASSWORD,
       database: 'shuttle_pass', // process.env.DB_DATABASE,
       entities: [User, Area, Classes, Student], //[__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
