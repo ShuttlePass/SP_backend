@@ -4,11 +4,10 @@ import { AuthModule } from './common/auth/AuthModule'
 import { APP_GUARD } from '@nestjs/core'
 import { JwtAuthGuard } from './common/auth/JwtAuthGuard'
 import { TypeOrmModule } from '@nestjs/typeorm'
-// import { globSync } from 'glob'
 import { ClassesModule } from './classes/classes.module'
 import { ConfigModule } from '@nestjs/config'
-// import { User } from './user/user.entity'
-// import { Classes } from './classes/classes.entity'
+import { StudentModule } from './student/student.module'
+import { SimpleListModule } from './common/simpleList/simpleList.module'
 
 //const entities = globSync('dist/**/*.entity.js') // .js 파일로 변경
 
@@ -36,6 +35,8 @@ import { ConfigModule } from '@nestjs/config'
     UserModule,
     AuthModule,
     ClassesModule,
+    StudentModule,
+    SimpleListModule,
   ],
 })
 export class AppModule {}
