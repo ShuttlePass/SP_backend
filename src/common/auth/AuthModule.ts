@@ -9,7 +9,7 @@ import { PassportModule } from '@nestjs/passport'
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'shuttle-pass', // 비밀키 설정
-      signOptions: { expiresIn: '1h' }, // 토큰 만료 시간 설정
+      signOptions: { expiresIn: '24h' }, // 토큰 만료 시간 설정
     }),
   ],
   providers: [AuthService, JwtStrategy],

@@ -21,10 +21,10 @@ export class Student {
   st_address: string
 
   @Column({ type: 'decimal', precision: 9, scale: 6 })
-  st_address_x: number
+  st_address_x?: number
 
   @Column({ type: 'decimal', precision: 9, scale: 6 })
-  st_address_y: number
+  st_address_y?: number
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date
