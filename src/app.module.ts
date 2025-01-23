@@ -8,6 +8,10 @@ import { ClassesModule } from './classes/classes.module'
 import { ConfigModule } from '@nestjs/config'
 import { StudentModule } from './student/student.module'
 import { SimpleListModule } from './common/simpleList/simpleList.module'
+import { User } from './user/user.entity'
+import { Area } from './entity/area.entity'
+import { Classes } from './classes/classes.entity'
+import { Student } from './student/student.entity'
 
 //const entities = globSync('dist/**/*.entity.js') // .js 파일로 변경
 
@@ -24,12 +28,12 @@ import { SimpleListModule } from './common/simpleList/simpleList.module'
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'svc.sel4.cloudtype.app', // process.env.DB_HOST,
-      port: 32402, // parseInt(process.env.DB_PORT || '32402', 10),
-      username: 'root', // process.env.DB_USERNAME,
-      password: 'shuttlepassdb123', // process.env.DB_PASSWORD,
-      database: 'shuttle_pass', // process.env.DB_DATABASE,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '32402', 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [User, Area, Classes, Student], //[__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
     }),
     UserModule,
