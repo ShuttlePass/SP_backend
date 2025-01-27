@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   // cors 설정
   app.enableCors({
-    origin: 'http://54.65.160.10', // 허용할 출처 (프론트엔드 URL)
+    origin: 'http://52.78.63.46', // 허용할 출처 (프론트엔드 URL)
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 허용할 HTTP 메서드
     credentials: true, // 쿠키 등 인증정보 허용 시
   })
