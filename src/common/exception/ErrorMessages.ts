@@ -31,6 +31,13 @@ export const returnInfos: { [key: string]: returnInfo } = {
     },
     statusCode: 409,
   },
+  AlreadyStudent: {
+    json: {
+      message: '이미 등록된 학생입니다',
+      code: -103,
+    },
+    statusCode: 409,
+  },
   BackEnd: {
     json: {
       message: '서버에러',

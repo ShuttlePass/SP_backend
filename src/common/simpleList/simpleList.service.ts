@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { successJson } from 'src/common/common.service'
+import { successListJson } from 'src/common/common.service'
 import { AreaRepository } from 'src/entity/area.repository'
 import { CompanyRepository } from 'src/entity/company.repository'
 import { JwtPayload } from '../auth/jwt.strategy'
 import { AreaFilterDto } from './simpleList.dto'
+import { ListDto } from '../paginateInfo.dto'
 
 @Injectable()
 export class SimpleListService {
@@ -12,14 +13,14 @@ export class SimpleListService {
     private companyRepository: CompanyRepository,
   ) {}
 
-  async companyList() {
-    const companyList = await this.companyRepository.getAll()
-    return successJson('회사 목록', companyList)
+  async companyList(filter: ListDto) {
+    const { data, pageInfo } = await this.companyRepository.getAll(filter)
+    return successListJson('회사 목록', data, pageInfo)
   }
 
   async areaList(user: JwtPayload, filter: AreaFilterDto) {
     filter.company_idx = user.company_idx
-    const areaList = await this.areaRepository.findByCompanyIdx(filter)
-    return successJson('지역 목록', areaList)
+    const { data, pageInfo } = await this.areaRepository.findManyByFilters(filter)
+    return successListJson('지역 목록', data, pageInfo)
   }
 }

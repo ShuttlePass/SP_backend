@@ -13,6 +13,9 @@ import { Area } from './entity/area.entity'
 import { Classes } from './classes/classes.entity'
 import { Student } from './student/student.entity'
 import { Company } from './entity/company.entity'
+import { ClassesDay } from './classes/classesDay.entity'
+import { ClassesEnrollment } from './classes/classesEnrollment.entity'
+import { ClassesName } from './classes/classesName.entity'
 
 //const entities = globSync('dist/**/*.entity.js') // .js 파일로 변경
 
@@ -34,7 +37,7 @@ import { Company } from './entity/company.entity'
       username: 'root', // process.env.DB_USERNAME,
       password: 'YpUlPRV5ZRWZoFMISLGX', // process.env.DB_PASSWORD,
       database: 'shuttle_pass', // process.env.DB_DATABASE,
-      entities: [User, Area, Classes, Student, Company], //[__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [User, Area, Classes, Student, Company, ClassesDay, ClassesEnrollment, ClassesName], //[__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
       logging: true,
     }),

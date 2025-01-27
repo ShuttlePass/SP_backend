@@ -12,5 +12,6 @@ import { Company } from 'src/entity/company.entity'
   imports: [TypeOrmModule.forFeature([Area, Company]), AuthModule],
   controllers: [SimpleListController],
   providers: [SimpleListService, AreaRepository, CompanyRepository],
+  exports: [AreaRepository],
 })
 export class SimpleListModule {}

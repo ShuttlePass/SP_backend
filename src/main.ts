@@ -6,6 +6,12 @@ import { AllExceptionsFilter, CustomExceptionFilter } from './common/exception/E
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  // cors 설정
+  app.enableCors({
+    origin: 'http://54.65.160.10', // 허용할 출처 (프론트엔드 URL)
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 허용할 HTTP 메서드
+    credentials: true, // 쿠키 등 인증정보 허용 시
+  })
   // Swagger 설정
   const config = new DocumentBuilder()
     .setTitle('API Documentation')

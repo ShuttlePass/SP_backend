@@ -3,6 +3,7 @@ import { SimpleListService } from './simpleList.service'
 import { SkipAuth } from 'src/common/auth/SkipAuthDecorator'
 import { JwtPayload } from '../auth/jwt.strategy'
 import { AreaFilterDto } from './simpleList.dto'
+import { ListDto } from '../paginateInfo.dto'
 
 @Controller('list')
 export class SimpleListController {
@@ -10,8 +11,8 @@ export class SimpleListController {
 
   @SkipAuth()
   @Get('/company')
-  companyList() {
-    return this.simpleListService.companyList()
+  companyList(@Query() filter: ListDto) {
+    return this.simpleListService.companyList(filter)
   }
 
   @Get('/area')

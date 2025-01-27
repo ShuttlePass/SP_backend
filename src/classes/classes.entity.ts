@@ -6,10 +6,7 @@ export class Classes {
   cl_idx: number
 
   @Column()
-  company_idx: number
-
-  @Column({ type: 'varchar', length: 255 })
-  cl_name: string
+  classes_name_idx: number
 
   @Column({ type: 'time' })
   cl_start_at: string

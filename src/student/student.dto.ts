@@ -1,4 +1,5 @@
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
+import { ListDto } from 'src/common/paginateInfo.dto'
 
 export class CreateStudentDto {
   company_idx: number
@@ -14,4 +15,25 @@ export class CreateStudentDto {
 
   @IsNotEmpty()
   st_address: string
+}
+
+export class StudentFilterDto extends ListDto {
+  company_idx: number
+  @IsOptional()
+  ar_name: string
+
+  @IsOptional()
+  area_idx: number
+
+  @IsOptional()
+  st_name: string
+
+  @IsOptional()
+  st_contact: string
+
+  @IsOptional()
+  st_address: string
+
+  @IsOptional()
+  st_idx: number
 }
