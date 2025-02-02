@@ -11,5 +11,6 @@ import { SimpleListModule } from 'src/common/simpleList/simpleList.module'
   imports: [TypeOrmModule.forFeature([Student]), AuthModule, SimpleListModule],
   controllers: [StudentController],
   providers: [StudentService, StudentRepository],
+  exports: [StudentRepository],
 })
 export class StudentModule {}

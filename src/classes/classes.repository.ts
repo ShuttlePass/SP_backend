@@ -1,7 +1,7 @@
 import { Classes } from './classes.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { ClassesFilterDto } from './classes.dto'
+import { ClassesEnrollDto, ClassesEnrollFilterDto, ClassesFilterDto } from './classes.dto'
 import { ClassesName } from './classesName.entity'
 import { ClassesDay } from './classesDay.entity'
 import { ClassesEnrollment } from './classesEnrollment.entity'
@@ -22,6 +22,10 @@ export class ClassesRepository {
     private readonly classesEnrollmentRepository: Repository<ClassesEnrollment>,
   ) {}
 
+  async enrollStudent(dto: ClassesEnrollDto) {
+    const enrollment = this.classesEnrollmentRepository.create(dto)
+    return this.classesEnrollmentRepository.save(enrollment)
+  }
   async findClassesName(filter: ListDto) {
     return this.classesNameRepository.find({
       where: {
@@ -29,6 +33,40 @@ export class ClassesRepository {
       },
     })
   }
+
+  async chkClassesTime(classesIdx: number, studentIdx: number, ceDate: Date) {
+    const classInfo = await this.classesRepository.findOne({
+      where: {
+        cl_idx: classesIdx,
+      },
+    })
+    if (!classInfo) {
+      throw new CustomException(returnInfos.BadRequest)
+    }
+
+    // 'classes_enrollment', 'classes_day', 'classes' 테이블을 조인하여 날짜 범위가 겹치는지 확인
+    const enrollment = await this.classesEnrollmentRepository
+      .createQueryBuilder('ce')
+      .innerJoin(ClassesDay, 'cd', 'ce.classes_day_idx = cd.cd_idx')
+      .innerJoin(Classes, 'cl', 'cd.classes_idx = cl.cl_idx')
+      .where('ce.student_idx = :studentIdx', { studentIdx })
+      .andWhere('ce.ce_date = :ceDate', { ceDate })
+      .andWhere('cl.cl_start_at <= :endAt', { endAt: classInfo.cl_end_at })
+      .andWhere('cl.cl_end_at >= :startAt', { startAt: classInfo.cl_start_at })
+      .getOne()
+    return enrollment
+  }
+
+  async findOneClassesDayByCompanyIdxAndCdIdx(companyIdx: number, classes_day_idx: number) {
+    return this.classesDayRepository
+      .createQueryBuilder('cd')
+      .innerJoin(Classes, 'cl', 'cl.cl_idx = cd.classes_idx')
+      .innerJoin(ClassesName, 'cn', 'cn.cn_idx = cl.classes_name_idx')
+      .where('cn.company_idx = :company_idx', { company_idx: companyIdx })
+      .where('cd.cd_idx = :cd_idx', { cd_idx: classes_day_idx })
+      .getOne()
+  }
+
   async findClassesByFilters(filter: ClassesFilterDto) {
     const query = this.classesRepository
       .createQueryBuilder('cl')
@@ -44,6 +82,7 @@ export class ClassesRepository {
         'cn.cn_name AS cn_name',
         'cn.cn_idx AS cn_idx',
         'GROUP_CONCAT(cd.cd_day) AS cd_days',
+        'cd.cd_idx AS cd_idx',
       ])
       .groupBy('cl.cl_idx')
     if (filter.company_idx) {
@@ -62,6 +101,53 @@ export class ClassesRepository {
       query.orderBy('cl.created_at', filter.dir)
     } else if (filter.order == 'cn_name') {
       query.orderBy('cn.cn_name', filter.dir)
+    } else {
+      throw new CustomException(returnInfos.BadRequest, '등록되지 않은 order -> 추가 문의해주세요!')
+    }
+    // listData
+    return await getListData(query, filter)
+  }
+
+  async findClassesEnrollByFilters(filter: ClassesEnrollFilterDto) {
+    const query = this.classesEnrollmentRepository
+      .createQueryBuilder('ce')
+      .innerJoin(ClassesDay, 'cd', 'ce.classes_day_idx = cd.cd_idx')
+      .innerJoin(Classes, 'cl', 'cl.cl_idx = cd.classes_idx')
+      .innerJoin(ClassesName, 'cn', 'cl.classes_name_idx = cn.cn_idx')
+      .select([
+        'ce.ce_idx AS ce_idx',
+        'ce.student_idx AS student_idx',
+        'ce.ce_date AS ce_date',
+        'ce.classes_day_idx AS classes_day_idx',
+        'ce.created_at AS created_at',
+        'ce.updated_at AS updated_at',
+        'cd.classes_idx AS classes_idx',
+        'cd.cd_day AS cd_day',
+        'cl.cl_max_num AS cl_max_num',
+        'cl.cl_start_at AS cl_start_at',
+        'cl.cl_end_at AS cl_end_at',
+        'cn.cn_idx AS cn_idx',
+        'cn.cn_name AS cn_name',
+      ])
+    if (filter.company_idx) {
+      query.andWhere('cn.company_idx = :company_idx', { company_idx: filter.company_idx })
+    }
+    if (filter.student_idx) {
+      query.andWhere('ce.student_idx = :student_idx', { student_idx: filter.student_idx })
+    }
+    if (filter.ce_date) {
+      query.andWhere('ce.ce_date = :ce_date', { ce_date: filter.ce_date })
+    }
+    if (filter.cn_idx) {
+      query.andWhere('cn.cn_idx = :cn_idx', { cn_idx: filter.cn_idx })
+    }
+    if (filter.order == 'created_at') {
+      query.orderBy('ce.created_at', filter.dir)
+    } else if (filter.order == 'cn_name') {
+      query.orderBy('cn.cn_name', filter.dir)
+    } else if (filter.order == 'class_at') {
+      query.orderBy('ce.ce_date', filter.dir)
+      query.addOrderBy('cl.cl_start_at', filter.dir)
     } else {
       throw new CustomException(returnInfos.BadRequest, '등록되지 않은 order -> 추가 문의해주세요!')
     }

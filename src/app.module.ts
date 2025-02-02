@@ -37,6 +37,7 @@ import { ClassesName } from './classes/classesName.entity'
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
+      timezone: 'Z',
       entities: [User, Area, Classes, Student, Company, ClassesDay, ClassesEnrollment, ClassesName], //[__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
       logging: true,

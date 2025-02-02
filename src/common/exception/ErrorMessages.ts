@@ -38,6 +38,13 @@ export const returnInfos: { [key: string]: returnInfo } = {
     },
     statusCode: 409,
   },
+  ConflictClassesTime: {
+    json: {
+      message: '이미 등록된 수업과 시간이 겹칩니다',
+      code: -104,
+    },
+    statusCode: 409,
+  },
   BackEnd: {
     json: {
       message: '서버에러',

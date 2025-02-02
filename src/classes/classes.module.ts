@@ -8,9 +8,10 @@ import { AuthModule } from 'src/common/auth/AuthModule'
 import { ClassesName } from './classesName.entity'
 import { ClassesEnrollment } from './classesEnrollment.entity'
 import { ClassesDay } from './classesDay.entity'
+import { StudentModule } from 'src/student/student.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Classes, ClassesName, ClassesEnrollment, ClassesDay]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Classes, ClassesName, ClassesEnrollment, ClassesDay]), AuthModule, StudentModule],
   controllers: [ClassesController],
   providers: [ClassesService, ClassesRepository],
 })

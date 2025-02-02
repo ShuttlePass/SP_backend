@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Request, Query } from '@nestjs/common'
 import { ClassesService } from './classes.service'
-import { ClassesFilterDto } from './classes.dto'
+import { ClassesEnrollDto, ClassesEnrollFilterDto, ClassesFilterDto } from './classes.dto'
 import { JwtPayload } from 'src/common/auth/jwt.strategy'
 import { ListDto } from 'src/common/paginateInfo.dto'
 
@@ -13,6 +13,13 @@ export class ClassesController {
     return this.classesService.create(data)
   }
 
+  @Get()
+  list(@Request() req: any, @Query() filter: ClassesFilterDto) {
+    const user: JwtPayload = req.user
+    filter.company_idx = user.company_idx
+    return this.classesService.classesList(filter)
+  }
+
   @Get('/name')
   nameList(@Request() req: any, @Query() filter: ListDto) {
     const user: JwtPayload = req.user
@@ -20,10 +27,17 @@ export class ClassesController {
     return this.classesService.nameList(filter)
   }
 
-  @Get()
-  list(@Request() req: any, @Query() filter: ClassesFilterDto) {
+  @Post('/enroll')
+  enroll(@Request() req: any, @Body() dto: ClassesEnrollDto) {
+    const user: JwtPayload = req.user
+    dto.company_idx = user.company_idx
+    return this.classesService.enroll(dto)
+  }
+
+  @Get('/enroll')
+  enrollList(@Request() req: any, @Query() filter: ClassesEnrollFilterDto) {
     const user: JwtPayload = req.user
     filter.company_idx = user.company_idx
-    return this.classesService.classesList(filter)
+    return this.classesService.enrollList(filter)
   }
 }

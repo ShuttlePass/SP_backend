@@ -18,6 +18,15 @@ export class StudentRepository {
     return this.repository.save(student)
   }
 
+  async findOneByCompanyIdx(companyIdx: number, studentIdx: number) {
+    return this.repository.findOne({
+      where: {
+        company_idx: companyIdx,
+        st_idx: studentIdx,
+      },
+    })
+  }
+
   async findOneByCoIdxAndStNameAndStContact(studentData: CreateStudentDto): Promise<Student | null> {
     return this.repository.findOne({
       where: {
