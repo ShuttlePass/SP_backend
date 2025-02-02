@@ -14,13 +14,13 @@ export class SimpleListService {
   ) {}
 
   async companyList(filter: ListDto) {
-    const { data, pageInfo } = await this.companyRepository.getAll(filter)
+    const { data, pageInfo } = await this.companyRepository.findBy(filter)
     return successListJson('회사 목록', data, pageInfo)
   }
 
   async areaList(user: JwtPayload, filter: AreaFilterDto) {
     filter.company_idx = user.company_idx
-    const { data, pageInfo } = await this.areaRepository.findManyByFilters(filter)
+    const { data, pageInfo } = await this.areaRepository.findByFilters(filter)
     return successListJson('지역 목록', data, pageInfo)
   }
 }

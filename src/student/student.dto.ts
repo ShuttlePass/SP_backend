@@ -18,7 +18,6 @@ export class CreateStudentDto {
 }
 
 export class StudentFilterDto extends ListDto {
-  company_idx: number
   @IsOptional()
   ar_name: string
 

@@ -1,23 +1,26 @@
-import { IsOptional } from 'class-validator'
+import { IsDate, IsOptional } from 'class-validator'
 import { ListDto } from 'src/common/paginateInfo.dto'
 
+export enum cd_day {
+  SUN = 'SUN',
+  MON = 'MON',
+  TUE = 'TUE',
+  WED = 'WED',
+  THU = 'THU',
+  FRI = 'FRI',
+  SAT = 'SAT',
+}
+
 export class ClassesFilterDto extends ListDto {
-  company_idx: number
   @IsOptional()
-  ar_name: string
+  cn_idx: number // 수업 이름 키 값값
 
   @IsOptional()
-  area_idx: number
+  cn_name: string // 수업 이름
 
   @IsOptional()
-  st_name: string
+  cd_day: cd_day
 
   @IsOptional()
-  st_contact: string
-
-  @IsOptional()
-  st_address: string
-
-  @IsOptional()
-  st_idx: number
+  date: Date
 }

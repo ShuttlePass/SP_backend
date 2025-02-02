@@ -15,7 +15,7 @@ export class UserService {
   ) {}
 
   async login(loginUserDto: LoginUserDto) {
-    const user = await this.userRepository.findUserById(loginUserDto.us_id)
+    const user = await this.userRepository.findOneUserById(loginUserDto.us_id)
     if (!user) {
       throw new CustomException(returnInfos.WrongId)
     }
@@ -29,7 +29,7 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto) {
     // 사용자 생성 로직
-    const idCheck = await this.userRepository.findUserById(createUserDto.us_id)
+    const idCheck = await this.userRepository.findOneUserById(createUserDto.us_id)
     if (idCheck) {
       throw new CustomException(returnInfos.AlreadyUsedId)
     }

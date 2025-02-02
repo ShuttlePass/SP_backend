@@ -16,6 +16,8 @@ export class ListDto {
   @IsOptional()
   @IsIn(['DESC', 'ASC'])
   dir: 'DESC' | 'ASC' = 'ASC'
+
+  company_idx: number
 }
 
 export class CpageInfo {

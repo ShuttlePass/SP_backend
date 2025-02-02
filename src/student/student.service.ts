@@ -17,7 +17,7 @@ export class StudentService {
   async createStudent(createStudentDto: CreateStudentDto, user: JwtPayload) {
     createStudentDto.company_idx = user.company_idx
     // area_idx company_idx에 해당되는앤지 확인
-    const area = await this.areaRepository.findByArIdxAndCompanyIdx(
+    const area = await this.areaRepository.findOneByArIdxAndCompanyIdx(
       createStudentDto.area_idx,
       createStudentDto.company_idx,
     )
@@ -25,7 +25,7 @@ export class StudentService {
       throw new CustomException(returnInfos.BadRequest, 'area_idx 이상')
     }
     // 같은 company_idx, 이름, 번호면 이미 등록된 학생이라고 알려주기
-    const chkStudent = await this.studentRepository.findByCoIdxAndStNameAndStContact(createStudentDto)
+    const chkStudent = await this.studentRepository.findOneByCoIdxAndStNameAndStContact(createStudentDto)
     if (chkStudent) {
       throw new CustomException(returnInfos.AlreadyStudent)
     }
@@ -35,7 +35,7 @@ export class StudentService {
   }
 
   async list(filter: StudentFilterDto) {
-    const { data, pageInfo } = await this.studentRepository.findManyByFilters(filter)
+    const { data, pageInfo } = await this.studentRepository.findByFilters(filter)
     // option 확인해서 data에 등록 수업 넣기기
     return successListJson('학생 목록', data, pageInfo)
   }

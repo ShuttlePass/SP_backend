@@ -14,7 +14,7 @@ export class UserRepository {
     return this.repository.save(user)
   }
 
-  async findUserById(us_id: string): Promise<User | null> {
+  async findOneUserById(us_id: string): Promise<User | null> {
     return this.repository.findOne({ where: { us_id } })
   }
 

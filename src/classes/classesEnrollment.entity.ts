@@ -9,7 +9,7 @@ export class ClassesEnrollment {
   student_idx: number
 
   @Column()
-  classes_idx: number
+  classes_day_idx: number
 
   @Column({ type: 'date' })
   ce_date: Date

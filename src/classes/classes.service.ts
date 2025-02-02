@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { successJson, successListJson } from 'src/common/common.service'
+import { getEnumDay, successJson, successListJson } from 'src/common/common.service'
 import { ClassesRepository } from './classes.repository'
 import { CustomException } from 'src/common/exception/ExceptionFilter'
 import { returnInfos } from 'src/common/exception/ErrorMessages'
 import { ClassesFilterDto } from './classes.dto'
+import { ListDto } from 'src/common/paginateInfo.dto'
 
 @Injectable()
 export class ClassesService {
@@ -16,8 +17,17 @@ export class ClassesService {
     return successJson('요청 성공', data)
   }
 
-  // async list(filter: ClassesFilterDto) {
-  //   const { data, pageInfo } = await this.classesRepository.findManyByFilters(filter)
-  //   return successListJson('수업 목록', data, pageInfo)
-  // }
+  async nameList(filter: ListDto) {
+    const data = await this.classesRepository.findClassesName(filter)
+    return successListJson('수업 이름 목록', data)
+  }
+
+  async classesList(filter: ClassesFilterDto) {
+    if (filter.date) {
+      filter.date = new Date(filter.date)
+      filter.cd_day = getEnumDay(filter.date)
+    }
+    const { data, pageInfo } = await this.classesRepository.findClassesByFilters(filter)
+    return successListJson('수업 목록', data, pageInfo)
+  }
 }

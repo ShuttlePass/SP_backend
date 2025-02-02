@@ -10,8 +10,16 @@ export class AreaRepository {
     private readonly repository: Repository<Area>, // Repository를 직접 주입받음
   ) {}
 
-  async findManyByFilters(filter: AreaFilterDto) {
-    const query = this.repository.createQueryBuilder('ar')
+  async findByFilters(filter: AreaFilterDto) {
+    const query = this.repository
+      .createQueryBuilder('ar')
+      .select([
+        'ar.ar_idx as ar_idx',
+        'ar.company_idx as company_idx',
+        'ar.ar_name as ar_name',
+        'ar.created_at as created_at',
+        'ar.updated_at as updated_at',
+      ])
     // where 문
     if (filter.company_idx) {
       query.andWhere('ar.company_idx = :company_idx', { company_idx: filter.company_idx })
@@ -23,7 +31,7 @@ export class AreaRepository {
     return await getListData(query, filter)
   }
 
-  async findByArIdxAndCompanyIdx(ar_idx: number, company_idx: number): Promise<Area | null> {
+  async findOneByArIdxAndCompanyIdx(ar_idx: number, company_idx: number): Promise<Area | null> {
     return this.repository.findOne({ where: { ar_idx, company_idx } })
   }
 }

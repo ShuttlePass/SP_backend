@@ -18,7 +18,7 @@ export class StudentRepository {
     return this.repository.save(student)
   }
 
-  async findByCoIdxAndStNameAndStContact(studentData: CreateStudentDto): Promise<Student | null> {
+  async findOneByCoIdxAndStNameAndStContact(studentData: CreateStudentDto): Promise<Student | null> {
     return this.repository.findOne({
       where: {
         company_idx: studentData.company_idx,
@@ -28,7 +28,7 @@ export class StudentRepository {
     })
   }
 
-  async findManyByFilters(filter: StudentFilterDto) {
+  async findByFilters(filter: StudentFilterDto) {
     const query = this.repository
       .createQueryBuilder('st')
       .innerJoin(Area, 'ar', 'st.area_idx = ar.ar_idx')

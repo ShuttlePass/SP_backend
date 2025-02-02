@@ -10,8 +10,15 @@ export class CompanyRepository {
     private readonly repository: Repository<Company>, // Repository를 직접 주입받음
   ) {}
 
-  async getAll(filter: ListDto) {
-    const query = this.repository.createQueryBuilder('co')
+  async findBy(filter: ListDto) {
+    const query = this.repository
+      .createQueryBuilder('co')
+      .select([
+        'co.co_idx as co_idx',
+        'co.co_name as co_name',
+        'co.created_at as created_at',
+        'co.updated_at as updated_at',
+      ])
     return await getListData(query, filter)
   }
 }

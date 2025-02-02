@@ -2,6 +2,7 @@ import { JwtPayload } from 'src/common/auth/jwt.strategy'
 import { us_level } from 'src/user/user.dto'
 import { CpageInfo, ListDto } from './paginateInfo.dto'
 import { SelectQueryBuilder } from 'typeorm'
+import { cd_day } from 'src/classes/classes.dto'
 
 export const successJson = (message: string, data?: any, code?: number) => {
   return {
@@ -53,4 +54,10 @@ export const getListData = async (query: SelectQueryBuilder<any>, dto: ListDto) 
     listData.data = await query.getRawMany()
   }
   return listData as paginateReturn
+}
+
+// Date 객체에서 요일을 가져와 cd_day enum으로 변환하는 함수
+export function getEnumDay(date: Date): cd_day {
+  const days: cd_day[] = [cd_day.SUN, cd_day.MON, cd_day.TUE, cd_day.WED, cd_day.THU, cd_day.FRI, cd_day.SAT]
+  return days[date.getDay()]
 }

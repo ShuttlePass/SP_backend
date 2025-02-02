@@ -8,6 +8,9 @@ export class Classes {
   @Column()
   classes_name_idx: number
 
+  @Column()
+  cl_max_num: number
+
   @Column({ type: 'time' })
   cl_start_at: string
 
