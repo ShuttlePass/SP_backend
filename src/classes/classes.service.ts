@@ -3,7 +3,13 @@ import { getEnumDay, successJson, successListJson } from 'src/common/common.serv
 import { ClassesRepository } from './classes.repository'
 import { CustomException } from 'src/common/exception/ExceptionFilter'
 import { returnInfos } from 'src/common/exception/ErrorMessages'
-import { ClassesEnrollDto, ClassesEnrollFilterDto, ClassesFilterDto } from './classes.dto'
+import {
+  ClassesEnrollDto,
+  ClassesEnrollFilterDto,
+  ClassesFilterDto,
+  CreateClassesDto,
+  CreateClassesNameDto,
+} from './classes.dto'
 import { ListDto } from 'src/common/paginateInfo.dto'
 import { StudentRepository } from 'src/student/student.repository'
 
@@ -14,11 +20,15 @@ export class ClassesService {
     private studentRepository: StudentRepository,
   ) {}
 
-  async create(data: any) {
-    if (!data) {
-      throw new CustomException(returnInfos.BackEnd)
-    }
-    return successJson('요청 성공', data)
+  async nameCreate(dto: CreateClassesNameDto) {
+    const classesName = await this.classesRepository.nameCreate(dto)
+    return successJson('수업명 추가 성공', classesName.cn_idx)
+  }
+
+  async classesCreate(dto: CreateClassesDto) {
+    const classes = await this.classesRepository.classesCreate(dto)
+    await this.classesRepository.classesDayCreate(dto, classes.cl_idx)
+    return successJson('수업 생성 성공', classes.cl_idx)
   }
 
   async nameList(filter: ListDto) {
@@ -28,11 +38,15 @@ export class ClassesService {
 
   async classesList(filter: ClassesFilterDto) {
     if (filter.date) {
-      filter.date = new Date(filter.date)
-      filter.cd_day = getEnumDay(filter.date)
+      filter.cd_day = getEnumDay(new Date(filter.date))
     }
-    const { data, pageInfo } = await this.classesRepository.findClassesByFilters(filter)
-    // todo - 현재 등록 인원 파싱하기
+    // eslint-disable-next-line prefer-const
+    let { data, pageInfo } = await this.classesRepository.findClassesByFilters(filter)
+
+    // 현재 등록 인원 파싱하기
+    if (filter.date) {
+      data = await this.classesRepository.parseClassesNum(data, filter.date)
+    }
     return successListJson('수업 목록', data, pageInfo)
   }
 
@@ -50,16 +64,18 @@ export class ClassesService {
     if (!classes_day) {
       throw new CustomException(returnInfos.BadRequest, '잘못된 classes_day_idx')
     }
-    // 날짜와 day 맞는지 확인
-    if (classes_day.cd_day != getEnumDay(new Date(dto.ce_date))) {
-      throw new CustomException(returnInfos.BadRequest, '잘못된 ce_date')
-    }
+    // todo - 이미 꽉찬 수업이면 out!
     // 시간 겹치는 수업이 없는지 확인
     const enrollment = await this.classesRepository.chkClassesTime(
       classes_day.classes_idx,
       dto.student_idx,
       dto.ce_date,
     )
+    dto.ce_date = new Date(dto.ce_date)
+    // 날짜와 day 맞는지 확인
+    if (classes_day.cd_day != getEnumDay(dto.ce_date)) {
+      throw new CustomException(returnInfos.BadRequest, '잘못된 ce_date')
+    }
     if (enrollment) {
       throw new CustomException(returnInfos.ConflictClassesTime)
     }

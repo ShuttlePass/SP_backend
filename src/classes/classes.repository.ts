@@ -1,7 +1,13 @@
 import { Classes } from './classes.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { ClassesEnrollDto, ClassesEnrollFilterDto, ClassesFilterDto } from './classes.dto'
+import {
+  ClassesEnrollDto,
+  ClassesEnrollFilterDto,
+  ClassesFilterDto,
+  CreateClassesDto,
+  CreateClassesNameDto,
+} from './classes.dto'
 import { ClassesName } from './classesName.entity'
 import { ClassesDay } from './classesDay.entity'
 import { ClassesEnrollment } from './classesEnrollment.entity'
@@ -26,6 +32,29 @@ export class ClassesRepository {
     const enrollment = this.classesEnrollmentRepository.create(dto)
     return this.classesEnrollmentRepository.save(enrollment)
   }
+
+  async nameCreate(dto: CreateClassesNameDto) {
+    const classesName = this.classesNameRepository.create(dto)
+    return this.classesNameRepository.save(classesName)
+  }
+
+  async classesCreate(dto: CreateClassesDto) {
+    const classes = this.classesRepository.create({
+      classes_name_idx: dto.classes_name_idx,
+      cl_start_at: dto.cl_start_at,
+      cl_end_at: dto.cl_end_at,
+    })
+    return this.classesRepository.save(classes)
+  }
+
+  async classesDayCreate(dto: CreateClassesDto, classes_idx: number) {
+    const newClassesDays = dto.cd_days.map((cd_day) => ({
+      cd_day: cd_day,
+      classes_idx: classes_idx,
+    }))
+    return this.classesDayRepository.save(newClassesDays)
+  }
+
   async findClassesName(filter: ListDto) {
     return this.classesNameRepository.find({
       where: {
@@ -74,7 +103,7 @@ export class ClassesRepository {
       .innerJoin(ClassesDay, 'cd', 'cd.classes_idx = cl.cl_idx')
       .select([
         'cl.cl_idx AS classes_idx',
-        'cl.cl_max_num AS cl_max_num',
+        'cn.cn_max_num AS cn_max_num',
         'cl.cl_start_at AS cl_start_at',
         'cl.cl_end_at AS cl_end_at',
         'cl.created_at AS created_at',
@@ -123,7 +152,7 @@ export class ClassesRepository {
         'ce.updated_at AS updated_at',
         'cd.classes_idx AS classes_idx',
         'cd.cd_day AS cd_day',
-        'cl.cl_max_num AS cl_max_num',
+        'cn.cn_max_num AS cn_max_num',
         'cl.cl_start_at AS cl_start_at',
         'cl.cl_end_at AS cl_end_at',
         'cn.cn_idx AS cn_idx',
@@ -153,5 +182,24 @@ export class ClassesRepository {
     }
     // listData
     return await getListData(query, filter)
+  }
+
+  async parseClassesNum(data: any, ce_date: Date) {
+    // 1. cd_idx 값만 추출
+    const cdIdxs = data.map((classes: any) => classes.cd_idx)
+    const classesNum = await this.classesEnrollmentRepository
+      .createQueryBuilder('ce')
+      .select(['ce.classes_day_idx AS cd_idx, COUNT(*) AS cnt'])
+      .where('ce.classes_day_idx IN (:...cdIdxs)', { cdIdxs })
+      .where('ce.ce_date = :ce_date', { ce_date })
+      .groupBy('ce.classes_day_idx')
+      .getRawMany()
+
+    const countMap = new Map(classesNum.map((item) => [item.cd_idx, item.cnt]))
+    const updatedData = data.map((item: any) => ({
+      ...item,
+      count: countMap.get(item.cd_idx) || 0, // count가 없으면 기본값 0
+    }))
+    return updatedData
   }
 }

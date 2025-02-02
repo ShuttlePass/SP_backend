@@ -18,6 +18,10 @@ export class UserRepository {
     return this.repository.findOne({ where: { us_id } })
   }
 
+  async findOneUserByIdx(us_idx: number): Promise<User | null> {
+    return this.repository.findOne({ where: { us_idx } })
+  }
+
   async findByName(us_name: string): Promise<User[]> {
     return this.repository.createQueryBuilder('user').where('user.us_name = :us_name', { us_name }).getMany()
   }

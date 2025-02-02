@@ -1,4 +1,4 @@
-import { DefaultEntity } from 'src/entity/common.entity'
+import { DefaultEntity } from 'src/entity/defaultEntity.entity'
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
@@ -8,9 +8,6 @@ export class Classes extends DefaultEntity {
 
   @Column()
   classes_name_idx: number
-
-  @Column()
-  cl_max_num: number
 
   @Column({ type: 'time' })
   cl_start_at: string

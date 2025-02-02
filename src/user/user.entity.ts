@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 import { us_level } from './user.dto'
-import { DefaultEntity } from 'src/entity/common.entity'
+import { DefaultEntity } from 'src/entity/defaultEntity.entity'
 
 @Entity()
 export class User extends DefaultEntity {
@@ -10,7 +10,7 @@ export class User extends DefaultEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   us_id: string
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, select: false })
   us_password: string
 
   @Column({ type: 'enum', enum: ['manager', 'driver'], nullable: true })

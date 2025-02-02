@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional } from 'class-validator'
+import { IsArray, IsNotEmpty, IsOptional } from 'class-validator'
 import { ListDto } from 'src/common/paginateInfo.dto'
 
 export enum cd_day {
@@ -46,4 +46,29 @@ export class ClassesEnrollFilterDto extends ListDto {
 
   @IsOptional()
   ce_date: Date
+}
+
+export class CreateClassesNameDto {
+  company_idx: number
+  @IsNotEmpty()
+  cn_name: string
+
+  @IsNotEmpty()
+  cn_max_num: number
+}
+
+export class CreateClassesDto {
+  company_idx: number
+  @IsNotEmpty()
+  classes_name_idx: number
+
+  @IsNotEmpty()
+  cl_start_at: string
+
+  @IsNotEmpty()
+  cl_end_at: string
+
+  @IsNotEmpty()
+  @IsArray()
+  cd_days: cd_day[]
 }

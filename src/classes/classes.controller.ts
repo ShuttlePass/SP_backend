@@ -1,6 +1,12 @@
 import { Controller, Post, Body, Get, Request, Query } from '@nestjs/common'
 import { ClassesService } from './classes.service'
-import { ClassesEnrollDto, ClassesEnrollFilterDto, ClassesFilterDto } from './classes.dto'
+import {
+  ClassesEnrollDto,
+  ClassesEnrollFilterDto,
+  ClassesFilterDto,
+  CreateClassesDto,
+  CreateClassesNameDto,
+} from './classes.dto'
 import { JwtPayload } from 'src/common/auth/jwt.strategy'
 import { ListDto } from 'src/common/paginateInfo.dto'
 
@@ -8,9 +14,18 @@ import { ListDto } from 'src/common/paginateInfo.dto'
 export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
+  @Post('/name')
+  nameCreate(@Request() req: any, @Body() dto: CreateClassesNameDto) {
+    const user: JwtPayload = req.user
+    dto.company_idx = user.company_idx
+    return this.classesService.nameCreate(dto)
+  }
+
   @Post()
-  create(@Body() data: any) {
-    return this.classesService.create(data)
+  create(@Request() req: any, @Body() dto: CreateClassesDto) {
+    const user: JwtPayload = req.user
+    dto.company_idx = user.company_idx
+    return this.classesService.classesCreate(dto)
   }
 
   @Get()

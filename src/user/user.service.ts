@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { CreateUserDto, LoginUserDto } from './user.dto'
 import { comparePasswords, hashPassword } from 'src/common/auth/password.service'
 import { AuthService } from 'src/common/auth/auth.service'
-import { successJson } from 'src/common/common.service'
+import { successJson, successListJson } from 'src/common/common.service'
 import { CustomException } from 'src/common/exception/ExceptionFilter'
 import { returnInfos } from 'src/common/exception/ErrorMessages'
 import { UserRepository } from './user.repository'
@@ -37,5 +37,10 @@ export class UserService {
     const user = await this.userRepository.createUser(createUserDto)
     const token = await this.authService.encodeToken(user)
     return successJson('회원 가입 성공', token)
+  }
+
+  async myInfo(us_idx: number) {
+    const user = await this.userRepository.findOneUserByIdx(us_idx)
+    return successListJson('내 정보', user)
   }
 }

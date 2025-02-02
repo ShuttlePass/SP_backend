@@ -16,6 +16,12 @@ import { Company } from './entity/company.entity'
 import { ClassesDay } from './classes/classesDay.entity'
 import { ClassesEnrollment } from './classes/classesEnrollment.entity'
 import { ClassesName } from './classes/classesName.entity'
+import { ShuttleModule } from './shuttle/shuttle.module'
+import { Shuttle } from './shuttle/shuttle.entity'
+import { ShuttleArea } from './shuttle/shuttleArea.entity'
+import { ShuttleTime } from './shuttle/shuttleTime.entity'
+import { ShuttleReservation } from './shuttle/shuttleReservation.entity'
+import { ShuttleReservationEnrollment } from './shuttle/shuttleReservationEnrollment.entity'
 
 //const entities = globSync('dist/**/*.entity.js') // .js 파일로 변경
 
@@ -37,16 +43,35 @@ import { ClassesName } from './classes/classesName.entity'
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      timezone: 'Asia/Seoul', // 서울 시간으로 설정
-      entities: [User, Area, Classes, Student, Company, ClassesDay, ClassesEnrollment, ClassesName], //[__dirname + '/**/*.entity{.ts,.js}'],
+      timezone: 'Asia/Seoul',
+      entities: [
+        User,
+        Area,
+        Classes,
+        Student,
+        Company,
+        ClassesDay,
+        ClassesEnrollment,
+        ClassesName,
+        Shuttle,
+        ShuttleArea,
+        ShuttleTime,
+        ShuttleReservation,
+        ShuttleReservationEnrollment,
+      ], //[__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
       logging: true,
+      extra: {
+        connectionLimit: 10,
+        timezone: 'Asia/Seoul', // 세션 타임존 추가
+      },
     }),
     UserModule,
     AuthModule,
     ClassesModule,
     StudentModule,
     SimpleListModule,
+    ShuttleModule,
   ],
 })
 export class AppModule {}

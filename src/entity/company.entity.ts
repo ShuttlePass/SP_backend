@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
-import { DefaultEntity } from './common.entity'
+import { DefaultEntity } from './defaultEntity.entity'
 @Entity()
 export class Company extends DefaultEntity {
   @PrimaryGeneratedColumn()

@@ -90,19 +90,3 @@ export class StudentRepository {
     return await getListData(query, filter)
   }
 }
-
-// 1. st_idx 값만 추출
-// const studentIds = data.map((student: any) => student.st_idx)
-// todo - 수업 등록 정보넣기기
-// // 3. 각 student에 해당하는 class 데이터를 조회
-// const classes = await this.classRepository
-//   .createQueryBuilder('class')
-//   .where('class.st_idx IN (:...studentIds)', { studentIds })  // studentIds에 해당하는 class만 조회
-//   .getMany()
-
-// // 4. student별로 class 정보를 묶기
-// const result = students.map(student => ({
-//   st_idx: student.st_idx,
-//   student_name: student.student_name,
-//   classes: classes.filter(cls => cls.st_idx === student.st_idx),  // student와 class를 매칭
-// }))
