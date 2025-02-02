@@ -28,6 +28,7 @@ export class ClassesService {
       filter.cd_day = getEnumDay(filter.date)
     }
     const { data, pageInfo } = await this.classesRepository.findClassesByFilters(filter)
+    // todo - 현재 등록 인원 파싱하기
     return successListJson('수업 목록', data, pageInfo)
   }
 }

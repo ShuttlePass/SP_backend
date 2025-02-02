@@ -1,4 +1,4 @@
-import { IsDate, IsOptional } from 'class-validator'
+import { IsOptional } from 'class-validator'
 import { ListDto } from 'src/common/paginateInfo.dto'
 
 export enum cd_day {
