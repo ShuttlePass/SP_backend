@@ -32,12 +32,12 @@ import { ClassesName } from './classes/classesName.entity'
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST,
+      host: process.env.DB_HOST_LOCAL,
       port: parseInt(process.env.DB_PORT || '3306', 10),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      timezone: 'Z',
+      timezone: 'Asia/Seoul', // 서울 시간으로 설정
       entities: [User, Area, Classes, Student, Company, ClassesDay, ClassesEnrollment, ClassesName], //[__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
       logging: true,

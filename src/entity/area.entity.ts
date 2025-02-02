@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { DefaultEntity } from './common.entity'
 
 @Entity()
-export class Area {
+export class Area extends DefaultEntity {
   @PrimaryGeneratedColumn()
   ar_idx: number
 
@@ -10,10 +11,4 @@ export class Area {
 
   @Column({ type: 'varchar', length: 255 })
   ar_name: string
-
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date
 }

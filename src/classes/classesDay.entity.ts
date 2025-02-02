@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { DefaultEntity } from 'src/entity/common.entity'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
-export class ClassesDay {
+export class ClassesDay extends DefaultEntity {
   @PrimaryGeneratedColumn()
   cd_idx: number
 
@@ -13,10 +14,4 @@ export class ClassesDay {
     enum: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
   })
   cd_day: string
-
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date
 }

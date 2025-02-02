@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { DefaultEntity } from 'src/entity/common.entity'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
-export class Classes {
+export class Classes extends DefaultEntity {
   @PrimaryGeneratedColumn()
   cl_idx: number
 
@@ -16,10 +17,4 @@ export class Classes {
 
   @Column({ type: 'time' })
   cl_end_at: string
-
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date
 }

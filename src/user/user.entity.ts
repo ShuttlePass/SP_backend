@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 import { us_level } from './user.dto'
+import { DefaultEntity } from 'src/entity/common.entity'
 
 @Entity()
-export class User {
+export class User extends DefaultEntity {
   @PrimaryGeneratedColumn()
   us_idx: number
 
@@ -23,10 +24,4 @@ export class User {
 
   @Column({ type: 'varchar', length: 255 })
   us_name: string
-
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date
 }

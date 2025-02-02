@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { DefaultEntity } from 'src/entity/common.entity'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
-export class ClassesEnrollment {
+export class ClassesEnrollment extends DefaultEntity {
   @PrimaryGeneratedColumn()
   ce_idx: number
 
@@ -13,10 +14,4 @@ export class ClassesEnrollment {
 
   @Column({ type: 'date' })
   ce_date: Date
-
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date
 }
