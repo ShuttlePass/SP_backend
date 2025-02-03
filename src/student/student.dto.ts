@@ -36,3 +36,11 @@ export class StudentFilterDto extends ListDto {
   @IsOptional()
   st_idx: number
 }
+
+export class HaveClassesStudentFilterDto extends ListDto {
+  @IsOptional()
+  ce_date: string
+
+  @IsOptional()
+  st_name: string
+}

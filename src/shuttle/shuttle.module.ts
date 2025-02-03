@@ -9,7 +9,11 @@ import { ShuttleArea } from './shuttleArea.entity'
 import { ShuttleReservation } from './shuttleReservation.entity'
 import { ShuttleTime } from './shuttleTime.entity'
 import { ShuttleReservationEnrollment } from './shuttleReservationEnrollment.entity'
-import { User } from 'src/user/user.entity'
+import { UserModule } from 'src/user/user.module'
+import { ClassesEnrollment } from 'src/classes/classesEnrollment.entity'
+import { ClassesModule } from 'src/classes/classes.module'
+import { Student } from 'src/student/student.entity'
+import { StudentModule } from 'src/student/student.module'
 
 @Module({
   imports: [
@@ -19,9 +23,13 @@ import { User } from 'src/user/user.entity'
       ShuttleReservation,
       ShuttleTime,
       ShuttleReservationEnrollment,
-      User,
+      ClassesEnrollment,
+      Student,
     ]),
     AuthModule,
+    UserModule,
+    ClassesModule,
+    StudentModule,
   ],
   controllers: [ShuttleController],
   providers: [ShuttleService, ShuttleRepository],

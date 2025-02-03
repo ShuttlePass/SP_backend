@@ -12,12 +12,15 @@ import {
 } from './classes.dto'
 import { ListDto } from 'src/common/paginateInfo.dto'
 import { StudentRepository } from 'src/student/student.repository'
+import { InjectDataSource } from '@nestjs/typeorm'
+import { DataSource } from 'typeorm'
 
 @Injectable()
 export class ClassesService {
   constructor(
     private classesRepository: ClassesRepository,
     private studentRepository: StudentRepository,
+    @InjectDataSource() private readonly dataSource: DataSource,
   ) {}
 
   async nameCreate(dto: CreateClassesNameDto) {
@@ -26,10 +29,13 @@ export class ClassesService {
   }
 
   async classesCreate(dto: CreateClassesDto) {
-    // todo - 트랜잭션 구현하기
-    const classes = await this.classesRepository.classesCreate(dto)
-    await this.classesRepository.classesDayCreate(dto, classes.cl_idx)
-    return successJson('수업 생성 성공', classes.cl_idx)
+    return await this.dataSource.transaction(async (manager) => {
+      // 수업 등록
+      const classes = await this.classesRepository.classesCreate(dto, manager)
+      // 수업 요일 등록
+      await this.classesRepository.classesDayCreate(dto, classes.cl_idx, manager)
+      return successJson('수업 생성 성공', classes.cl_idx)
+    })
   }
 
   async nameList(filter: ListDto) {
@@ -43,7 +49,6 @@ export class ClassesService {
     }
     // eslint-disable-next-line prefer-const
     let { data, pageInfo } = await this.classesRepository.findClassesByFilters(filter)
-
     // 현재 등록 인원 파싱하기
     if (filter.date) {
       data = await this.classesRepository.parseClassesNum(data, filter.date)
@@ -53,7 +58,7 @@ export class ClassesService {
 
   async enroll(dto: ClassesEnrollDto) {
     // 올바른 st_idx인지 확인(company_idx가 같고, 존재하는지)
-    const student = await this.studentRepository.findOneByCompanyIdx(dto.company_idx, dto.student_idx)
+    const student = await this.studentRepository.findOneByCompanyIdxAndStudentIdx(dto.company_idx, dto.student_idx)
     if (!student) {
       throw new CustomException(returnInfos.BadRequest, '잘못된 student_idx')
     }
@@ -72,9 +77,8 @@ export class ClassesService {
       dto.student_idx,
       dto.ce_date,
     )
-    dto.ce_date = new Date(dto.ce_date)
     // 날짜와 day 맞는지 확인
-    if (classes_day.cd_day != getEnumDay(dto.ce_date)) {
+    if (classes_day.cd_day != getEnumDay(new Date(dto.ce_date))) {
       throw new CustomException(returnInfos.BadRequest, '잘못된 ce_date')
     }
     if (enrollment) {

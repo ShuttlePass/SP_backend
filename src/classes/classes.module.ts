@@ -14,5 +14,6 @@ import { StudentModule } from 'src/student/student.module'
   imports: [TypeOrmModule.forFeature([Classes, ClassesName, ClassesEnrollment, ClassesDay]), AuthModule, StudentModule],
   controllers: [ClassesController],
   providers: [ClassesService, ClassesRepository],
+  exports: [ClassesRepository],
 })
 export class ClassesModule {}

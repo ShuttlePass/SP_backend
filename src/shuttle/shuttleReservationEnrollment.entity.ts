@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 @Entity()
 export class ShuttleReservationEnrollment extends DefaultEntity {
   @PrimaryGeneratedColumn()
-  re_idx: number
+  sre_idx: number
 
   @Column()
   shuttle_reservation_idx: number

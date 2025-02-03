@@ -28,7 +28,7 @@ export class ClassesFilterDto extends ListDto {
 export class ClassesEnrollDto {
   company_idx: number
   @IsNotEmpty()
-  ce_date: Date
+  ce_date: string
 
   @IsNotEmpty()
   student_idx: number

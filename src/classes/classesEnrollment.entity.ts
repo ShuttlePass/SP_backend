@@ -13,5 +13,5 @@ export class ClassesEnrollment extends DefaultEntity {
   classes_day_idx: number
 
   @Column({ type: 'date' })
-  ce_date: Date
+  ce_date: string
 }

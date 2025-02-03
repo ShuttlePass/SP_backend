@@ -45,6 +45,27 @@ export const returnInfos: { [key: string]: returnInfo } = {
     },
     statusCode: 409,
   },
+  AlreadyHaveShuttle: {
+    json: {
+      message: '이미 배정된 셔틀이 있는 기사님 입니다.',
+      code: -105,
+    },
+    statusCode: 409,
+  },
+  AlreadyReservation: {
+    json: {
+      message: '이미 배정했습니다.',
+      code: -105,
+    },
+    statusCode: 409,
+  },
+  NoClasses: {
+    json: {
+      message: '해당 날짜에 등록된 수업이 없습니다',
+      code: -106,
+    },
+    statusCode: 409,
+  },
   BackEnd: {
     json: {
       message: '서버에러',

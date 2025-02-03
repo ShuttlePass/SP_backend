@@ -1,6 +1,6 @@
 import { Classes } from './classes.entity'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { EntityManager, Repository } from 'typeorm'
 import {
   ClassesEnrollDto,
   ClassesEnrollFilterDto,
@@ -38,21 +38,21 @@ export class ClassesRepository {
     return this.classesNameRepository.save(classesName)
   }
 
-  async classesCreate(dto: CreateClassesDto) {
-    const classes = this.classesRepository.create({
+  async classesCreate(dto: CreateClassesDto, manager: EntityManager) {
+    const classes = manager.create(Classes, {
       classes_name_idx: dto.classes_name_idx,
       cl_start_at: dto.cl_start_at,
       cl_end_at: dto.cl_end_at,
     })
-    return this.classesRepository.save(classes)
+    return manager.save(classes)
   }
 
-  async classesDayCreate(dto: CreateClassesDto, classes_idx: number) {
+  async classesDayCreate(dto: CreateClassesDto, classes_idx: number, manager: EntityManager) {
     const newClassesDays = dto.cd_days.map((cd_day) => ({
       cd_day: cd_day,
       classes_idx: classes_idx,
     }))
-    return this.classesDayRepository.save(newClassesDays)
+    return manager.save(ClassesDay, newClassesDays)
   }
 
   async findClassesName(filter: ListDto) {
@@ -63,7 +63,7 @@ export class ClassesRepository {
     })
   }
 
-  async chkClassesTime(classesIdx: number, studentIdx: number, ceDate: Date) {
+  async chkClassesTime(classesIdx: number, studentIdx: number, ceDate: string) {
     const classInfo = await this.classesRepository.findOne({
       where: {
         cl_idx: classesIdx,
@@ -94,6 +94,10 @@ export class ClassesRepository {
       .where('cn.company_idx = :company_idx', { company_idx: companyIdx })
       .where('cd.cd_idx = :cd_idx', { cd_idx: classes_day_idx })
       .getOne()
+  }
+
+  async findClassesEnrollByCeDateAndStudentIdx(sr_meet_date: string, student_idx: number) {
+    return this.classesEnrollmentRepository.findOne({ where: { student_idx, ce_date: sr_meet_date } })
   }
 
   async findClassesByFilters(filter: ClassesFilterDto) {

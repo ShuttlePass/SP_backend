@@ -1,8 +1,8 @@
 import { IsString, IsNotEmpty, Length, IsIn, IsInt } from 'class-validator'
 
 export enum us_level {
-  manager,
-  driver,
+  manager = 'manager',
+  driver = 'driver',
 }
 
 export class CreateUserDto {

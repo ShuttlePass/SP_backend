@@ -3,7 +3,7 @@ import { successJson, successListJson } from 'src/common/common.service'
 import { StudentRepository } from './student.repository'
 import { CustomException } from 'src/common/exception/ExceptionFilter'
 import { returnInfos } from 'src/common/exception/ErrorMessages'
-import { CreateStudentDto, StudentFilterDto } from './student.dto'
+import { CreateStudentDto, HaveClassesStudentFilterDto, StudentFilterDto } from './student.dto'
 import { JwtPayload } from 'src/common/auth/jwt.strategy'
 import { AreaRepository } from 'src/entity/area.repository'
 
@@ -37,6 +37,11 @@ export class StudentService {
   async list(filter: StudentFilterDto) {
     const { data, pageInfo } = await this.studentRepository.findByFilters(filter)
     // todo - option 확인해서 data에 등록 수업
+    return successListJson('학생 목록', data, pageInfo)
+  }
+
+  async haveClassesStudentList(filter: HaveClassesStudentFilterDto) {
+    const { data, pageInfo } = await this.studentRepository.findHaveClassesStudentByFilters(filter)
     return successListJson('학생 목록', data, pageInfo)
   }
 }
