@@ -36,7 +36,7 @@ export class StudentService {
 
   async list(filter: StudentFilterDto) {
     const { data, pageInfo } = await this.studentRepository.findByFilters(filter)
-    // option 확인해서 data에 등록 수업 넣기기
+    // todo - option 확인해서 data에 등록 수업
     return successListJson('학생 목록', data, pageInfo)
   }
 }

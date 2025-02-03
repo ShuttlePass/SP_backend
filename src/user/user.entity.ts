@@ -10,7 +10,7 @@ export class User extends DefaultEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   us_id: string
 
-  @Column({ type: 'varchar', length: 255, select: false })
+  @Column({ type: 'varchar', length: 255 })
   us_password: string
 
   @Column({ type: 'enum', enum: ['manager', 'driver'], nullable: true })

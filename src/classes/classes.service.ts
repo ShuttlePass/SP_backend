@@ -26,6 +26,7 @@ export class ClassesService {
   }
 
   async classesCreate(dto: CreateClassesDto) {
+    // todo - 트랜잭션 구현하기
     const classes = await this.classesRepository.classesCreate(dto)
     await this.classesRepository.classesDayCreate(dto, classes.cl_idx)
     return successJson('수업 생성 성공', classes.cl_idx)

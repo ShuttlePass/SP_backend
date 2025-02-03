@@ -14,6 +14,9 @@ export class ShuttleController {
     return this.shuttleService.carList(filter)
   }
 
+  // 차량 등록
+  // 차량 기사 배정
+
   @Post()
   create(@Body() data: any) {
     return this.shuttleService.create(data)

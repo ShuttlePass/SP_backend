@@ -41,6 +41,11 @@ export class UserService {
 
   async myInfo(us_idx: number) {
     const user = await this.userRepository.findOneUserByIdx(us_idx)
-    return successListJson('내 정보', user)
+    if (!user) {
+      throw new CustomException(returnInfos.BadRequest)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { us_password, ...filteredUser } = user
+    return successListJson('내 정보', filteredUser)
   }
 }

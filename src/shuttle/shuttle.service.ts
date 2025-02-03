@@ -18,7 +18,7 @@ export class ShuttleService {
 
   async carList(filter: CarFilterDto) {
     const { data, pageInfo } = await this.shuttleRepository.findShuttleByFilters(filter)
-    // option 확인해서 data에 등록 수업 넣기기
+    // todo - 지역 1:n 넣기
     return successListJson('차량 목록', data, pageInfo)
   }
 }
