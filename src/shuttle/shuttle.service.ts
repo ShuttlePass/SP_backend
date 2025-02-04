@@ -109,6 +109,7 @@ export class ShuttleService {
       }
       if (!dto.sr_address) {
         dto.sr_address = student.st_address
+        dto.area_idx = student.area_idx
       }
       // shuttleReservation 생성
       const shuttleReservation = await this.shuttleRepository.createShuttleReservation(dto, manager)

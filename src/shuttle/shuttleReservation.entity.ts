@@ -21,6 +21,9 @@ export class ShuttleReservation extends DefaultEntity {
   @Column()
   student_idx: number
 
+  @Column()
+  area_idx: number
+
   @Column({ type: 'varchar', length: 255 })
   sr_address: string
 

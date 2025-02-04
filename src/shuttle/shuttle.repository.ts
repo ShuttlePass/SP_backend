@@ -222,6 +222,7 @@ export class ShuttleRepository {
       .innerJoin(Student, 'student', 'student.st_idx = sr.student_idx')
       .innerJoin(ShuttleTime, 'st', 'st.st_idx = sr.shuttle_time_idx')
       .innerJoin(Shuttle, 'sh', 'sr.shuttle_idx = sh.sh_idx')
+      .innerJoin(Area, 'ar', 'sr.area_idx = ar.ar_idx')
       .select([
         'student.st_idx as student_idx',
         'student.st_name as st_name',
@@ -236,6 +237,8 @@ export class ShuttleRepository {
         'sr.sr_address_x as sr_address_x',
         'sr.sr_address_y as sr_address_y',
         'sr.sr_state as sr_state',
+        'sr.area_idx as area_idx',
+        'ar.ar_name as ar_name',
       ])
       .where('sh.sh_state NOT IN(0, 3)')
     // where 문

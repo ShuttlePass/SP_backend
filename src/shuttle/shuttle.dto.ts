@@ -47,6 +47,9 @@ export class ShuttleReservationEntityDto {
   sr_address: string
 
   @IsOptional()
+  area_idx: number
+
+  @IsOptional()
   sr_address_memo: string
 
   @IsOptional()

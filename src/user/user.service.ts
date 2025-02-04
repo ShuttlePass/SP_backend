@@ -24,7 +24,7 @@ export class UserService {
       throw new CustomException(returnInfos.WrongPassword)
     }
     const token = await this.authService.encodeToken(user)
-    return successJson('로그인 성공', token)
+    return successJson('로그인 성공', { us_level: user.us_level, company_idx: user.company_idx, token })
   }
 
   async createUser(createUserDto: CreateUserDto) {
