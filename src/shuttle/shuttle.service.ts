@@ -62,24 +62,27 @@ export class ShuttleService {
   }
 
   async createShuttle(dto: CreateShuttleDto) {
-    // driver_idx가 driver인지 확인
-    dto.sh_state = 0
-    if (dto.driver_idx) {
-      const user = await this.userRepository.findOneUserByIdx(dto.driver_idx)
-      if (!user) {
-        throw new CustomException(returnInfos.BadRequest)
+    return await this.dataSource.transaction(async (manager) => {
+      // driver_idx가 driver인지 확인
+      dto.sh_state = 0
+      if (dto.driver_idx) {
+        const user = await this.userRepository.findOneUserByIdx(dto.driver_idx)
+        if (!user) {
+          throw new CustomException(returnInfos.BadRequest)
+        }
+        if (user.company_idx != dto.company_idx || user.us_level != us_level.driver) {
+          throw new CustomException(returnInfos.BadRequest, '같은 회사 직원이 아니거나, driver이 아닌 회원임(manager)')
+        }
+        const car = await this.shuttleRepository.findOneByDriverIdx(dto.driver_idx)
+        if (car) {
+          throw new CustomException(returnInfos.AlreadyHaveShuttle)
+        }
+        dto.sh_state = 1
       }
-      if (user.company_idx != dto.company_idx || user.us_level != us_level.driver) {
-        throw new CustomException(returnInfos.BadRequest, '같은 회사 직원이 아니거나, driver이 아닌 회원임(manager)')
-      }
-      const car = await this.shuttleRepository.findOneByDriverIdx(dto.driver_idx)
-      if (car) {
-        throw new CustomException(returnInfos.AlreadyHaveShuttle)
-      }
-      dto.sh_state = 1
-    }
-    await this.shuttleRepository.createShuttle(dto)
-    return successJson('기사 배정 성공')
+      const shuttle = await this.shuttleRepository.createShuttle(dto, manager)
+      await this.shuttleRepository.createShuttleArea(dto, shuttle.sh_idx, manager)
+      return successJson('기사 배정 성공', shuttle.sh_idx)
+    })
   }
 
   async shuttleReservation(dto: ShuttleReservationDto) {

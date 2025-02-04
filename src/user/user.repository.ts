@@ -1,8 +1,10 @@
 import { User } from './user.entity'
-import { CreateUserDto } from './user.dto'
+import { CreateUserDto, UserFilterDto } from './user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Company } from 'src/entity/company.entity'
+import { getListData } from 'src/common/common.service'
+import { Shuttle } from 'src/shuttle/shuttle.entity'
 
 export class UserRepository {
   constructor(
@@ -31,5 +33,42 @@ export class UserRepository {
 
   async findOneCompanyByIdx(co_idx: number): Promise<Company | null> {
     return this.companyRepository.findOne({ where: { co_idx } })
+  }
+
+  async findByFilters(filter: UserFilterDto) {
+    const query = this.repository
+      .createQueryBuilder('us')
+      .select([
+        'us.us_idx as us_idx',
+        'us.us_id as us_id',
+        'us.us_level as us_level',
+        'us.company_idx as company_idx',
+        'us.us_contact as us_contact',
+        'us.us_name as us_name',
+        'sh.sh_idx as sh_idx',
+      ])
+      .leftJoin(Shuttle, 'sh', 'sh.driver_idx = us.us_idx AND sh.sh_state IN(1,2)')
+    // where 문
+    if (filter.company_idx) {
+      query.andWhere('us.company_idx = :company_idx', { company_idx: filter.company_idx })
+    }
+    if (filter.us_idx) {
+      query.andWhere('us.us_idx = :us_idx', { us_idx: filter.us_idx })
+    }
+    if (filter.us_level) {
+      query.andWhere('us.us_level = :us_level', { us_level: filter.us_level })
+    }
+    if (filter.us_name) {
+      query.andWhere('us.us_name LIKE :us_name', { us_name: `%${filter.us_name}%` })
+    }
+    if (filter.us_contact) {
+      query.andWhere('us.us_contact LIKE :us_contact', { us_contact: `%${filter.us_contact}%` })
+    }
+    // order 문
+    if (filter.order == 'created_at') {
+      query.orderBy('us.created_at', filter.dir)
+    }
+    // listData
+    return await getListData(query, filter)
   }
 }

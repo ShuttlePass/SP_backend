@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { CreateUserDto, LoginUserDto } from './user.dto'
+import { CreateUserDto, LoginUserDto, UserFilterDto } from './user.dto'
 import { comparePasswords, hashPassword } from 'src/common/auth/password.service'
 import { AuthService } from 'src/common/auth/auth.service'
 import { successJson, successListJson } from 'src/common/common.service'
@@ -51,5 +51,10 @@ export class UserService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { us_password, ...filteredUser } = user
     return successListJson('내 정보', filteredUser)
+  }
+
+  async list(filter: UserFilterDto) {
+    const { data, pageInfo } = await this.userRepository.findByFilters(filter)
+    return successListJson('학생 목록', data, pageInfo)
   }
 }

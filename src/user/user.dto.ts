@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, Length, IsIn, IsInt } from 'class-validator'
+import { IsString, IsNotEmpty, Length, IsIn, IsInt, IsOptional } from 'class-validator'
+import { ListDto } from 'src/common/paginateInfo.dto'
 
 export enum us_level {
   manager = 'manager',
@@ -43,4 +44,18 @@ export class LoginUserDto {
   @IsNotEmpty()
   @Length(8, 32)
   us_password: string
+}
+
+export class UserFilterDto extends ListDto {
+  @IsOptional()
+  us_idx: number
+
+  @IsOptional()
+  us_level: us_level
+
+  @IsOptional()
+  us_name: string
+
+  @IsOptional()
+  us_contact: string
 }

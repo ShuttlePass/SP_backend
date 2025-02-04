@@ -15,6 +15,7 @@ import { JwtPayload } from 'src/common/auth/jwt.strategy'
 export class ShuttleController {
   constructor(private readonly shuttleService: ShuttleService) {}
 
+  // 차량 등록
   @Post()
   createShuttle(@Request() req: any, @Body() dto: CreateShuttleDto) {
     const user: JwtPayload = req.user

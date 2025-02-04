@@ -28,6 +28,9 @@ export class CreateShuttleDto {
 
   @IsNotEmpty()
   sh_max_cnt: number
+
+  @IsNotEmpty()
+  area_idx: number[]
 }
 
 export class ShuttleReservationEntityDto {

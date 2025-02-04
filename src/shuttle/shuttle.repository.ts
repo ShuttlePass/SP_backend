@@ -47,9 +47,26 @@ export class ShuttleRepository {
     )
   }
 
-  async createShuttle(dto: CreateShuttleDto) {
-    const shuttle = this.shuttleRepository.create(dto)
-    return await this.shuttleRepository.save(shuttle)
+  async createShuttle(dto: CreateShuttleDto, manager: EntityManager) {
+    const shuttle = manager.create(Shuttle, dto)
+    return await manager.save(shuttle)
+  }
+
+  async createShuttleArea(dto: CreateShuttleDto, sh_idx: number, manager: EntityManager) {
+    const areas = await manager.find(Area, {
+      where: {
+        company_idx: dto.company_idx,
+        ar_idx: In(dto.area_idx),
+      },
+    })
+    if (areas.length != dto.area_idx.length) {
+      throw new CustomException(returnInfos.BadRequest, 'area_idx 잘못됨')
+    }
+    const saInstance = dto.area_idx.map((area_idx) => ({
+      area_idx,
+      shuttle_idx: sh_idx,
+    }))
+    return manager.save(ShuttleArea, saInstance)
   }
 
   async createShuttleReservation(dto: ShuttleReservationDto, manager: EntityManager) {
