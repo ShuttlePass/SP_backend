@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { EntityManager, In, Not, Repository } from 'typeorm'
 import {
   CarFilterDto,
+  CreateShuttleDto,
   EnterDriverDto,
   ReservationStudentFilterDto,
   ShuttleFilterDto,
@@ -44,6 +45,11 @@ export class ShuttleRepository {
       { sh_idx: dto.sh_idx, company_idx: dto.company_idx, sh_state: Not(In([2, 3])) }, // 운행중, 삭제상태 안됨됨
       { driver_idx: dto.us_idx, sh_state: 1 },
     )
+  }
+
+  async createShuttle(dto: CreateShuttleDto) {
+    const shuttle = this.shuttleRepository.create(dto)
+    return await this.shuttleRepository.save(shuttle)
   }
 
   async createShuttleReservation(dto: ShuttleReservationDto, manager: EntityManager) {
@@ -108,9 +114,15 @@ export class ShuttleRepository {
     })
   }
 
-  async findOneByDriverIdx(us_idx: number, sh_idx: number) {
+  async findOneByDriverIdxAndShIdx(us_idx: number, sh_idx: number) {
     return await this.shuttleRepository.findOne({
       where: { driver_idx: us_idx, sh_state: Not(4), sh_idx: Not(sh_idx) },
+    })
+  }
+
+  async findOneByDriverIdx(us_idx: number) {
+    return await this.shuttleRepository.findOne({
+      where: { driver_idx: us_idx, sh_state: Not(4) },
     })
   }
 

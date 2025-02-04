@@ -15,6 +15,21 @@ export class EnterDriverDto {
   sh_idx: number
 }
 
+export class CreateShuttleDto {
+  company_idx: number
+
+  @IsNotEmpty()
+  sh_name: string
+
+  @IsOptional()
+  driver_idx: number
+
+  sh_state: number
+
+  @IsNotEmpty()
+  sh_max_cnt: number
+}
+
 export class ShuttleReservationEntityDto {
   @IsNotEmpty()
   shuttle_idx: number

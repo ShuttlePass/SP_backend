@@ -5,6 +5,7 @@ import { CustomException } from 'src/common/exception/ExceptionFilter'
 import { returnInfos } from 'src/common/exception/ErrorMessages'
 import {
   CarFilterDto,
+  CreateShuttleDto,
   EnterDriverDto,
   ReservationStudentFilterDto,
   ShuttleFilterDto,
@@ -52,11 +53,32 @@ export class ShuttleService {
     if (user.company_idx != dto.company_idx || user.us_level != us_level.driver) {
       throw new CustomException(returnInfos.BadRequest, '같은 회사 직원이 아니거나, driver이 아닌 회원임(manager)')
     }
-    const car = await this.shuttleRepository.findOneByDriverIdx(dto.us_idx, dto.sh_idx)
+    const car = await this.shuttleRepository.findOneByDriverIdxAndShIdx(dto.us_idx, dto.sh_idx)
     if (car) {
       throw new CustomException(returnInfos.AlreadyHaveShuttle)
     }
     await this.shuttleRepository.updateShuttleDriver(dto)
+    return successJson('기사 배정 성공')
+  }
+
+  async createShuttle(dto: CreateShuttleDto) {
+    // driver_idx가 driver인지 확인
+    dto.sh_state = 0
+    if (dto.driver_idx) {
+      const user = await this.userRepository.findOneUserByIdx(dto.driver_idx)
+      if (!user) {
+        throw new CustomException(returnInfos.BadRequest)
+      }
+      if (user.company_idx != dto.company_idx || user.us_level != us_level.driver) {
+        throw new CustomException(returnInfos.BadRequest, '같은 회사 직원이 아니거나, driver이 아닌 회원임(manager)')
+      }
+      const car = await this.shuttleRepository.findOneByDriverIdx(dto.driver_idx)
+      if (car) {
+        throw new CustomException(returnInfos.AlreadyHaveShuttle)
+      }
+      dto.sh_state = 1
+    }
+    await this.shuttleRepository.createShuttle(dto)
     return successJson('기사 배정 성공')
   }
 

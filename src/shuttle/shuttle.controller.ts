@@ -2,6 +2,7 @@ import { Controller, Post, Body, Get, Request, Query, Put } from '@nestjs/common
 import { ShuttleService } from './shuttle.service'
 import {
   CarFilterDto,
+  CreateShuttleDto,
   EnterDriverDto,
   ReservationStudentFilterDto,
   ShuttleFilterDto,
@@ -13,6 +14,13 @@ import { JwtPayload } from 'src/common/auth/jwt.strategy'
 @Controller('shuttle')
 export class ShuttleController {
   constructor(private readonly shuttleService: ShuttleService) {}
+
+  @Post()
+  createShuttle(@Request() req: any, @Body() dto: CreateShuttleDto) {
+    const user: JwtPayload = req.user
+    dto.company_idx = user.company_idx
+    return this.shuttleService.createShuttle(dto)
+  }
 
   // 등록된 차량 목록
   @Get('/car')
@@ -55,6 +63,7 @@ export class ShuttleController {
     return this.shuttleService.shuttleReservationStudentList(filter)
   }
 
+  // 학생에게 맞는 셔틀 목록
   @Get('/match')
   shuttleMatchList(@Request() req: any, @Query() filter: ShuttleMatchFilterDto) {
     const user: JwtPayload = req.user
