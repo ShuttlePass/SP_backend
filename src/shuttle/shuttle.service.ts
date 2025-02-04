@@ -109,6 +109,8 @@ export class ShuttleService {
       }
       if (!dto.sr_address) {
         dto.sr_address = student.st_address
+      }
+      if (!dto.area_idx) {
         dto.area_idx = student.area_idx
       }
       // shuttleReservation 생성
