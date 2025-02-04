@@ -27,6 +27,9 @@ export class AreaRepository {
     if (filter.ar_name) {
       query.andWhere('ar.ar_name LIKE :name', { name: `%${filter.ar_name}%` })
     }
+    if (filter.ar_idx_in) {
+      query.andWhere('ar.ar_idx IN (:ar_idx_in)', { ar_idx_in: filter.ar_idx_in })
+    }
     // listData
     return await getListData(query, filter)
   }
