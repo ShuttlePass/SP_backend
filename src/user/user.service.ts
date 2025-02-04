@@ -33,6 +33,10 @@ export class UserService {
     if (idCheck) {
       throw new CustomException(returnInfos.AlreadyUsedId)
     }
+    const chkCompany = await this.userRepository.findOneCompanyByIdx(createUserDto.company_idx)
+    if (!chkCompany) {
+      throw new CustomException(returnInfos.BadRequest, `잘못된 co_idx, ${createUserDto.company_idx}`)
+    }
     createUserDto.us_password = await hashPassword(createUserDto.us_password)
     const user = await this.userRepository.createUser(createUserDto)
     const token = await this.authService.encodeToken(user)
