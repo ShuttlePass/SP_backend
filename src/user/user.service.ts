@@ -55,6 +55,6 @@ export class UserService {
 
   async list(filter: UserFilterDto) {
     const { data, pageInfo } = await this.userRepository.findByFilters(filter)
-    return successListJson('학생 목록', data, pageInfo)
+    return successListJson('회원 목록', data, pageInfo)
   }
 }

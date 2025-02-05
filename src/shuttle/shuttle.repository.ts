@@ -188,55 +188,58 @@ export class ShuttleRepository {
     if (filter.sh_idx) {
       where = { ...where, sh_idx: filter.sh_idx }
     }
-    const shuttles = await this.shuttleRepository.find({
+    let shuttles = await this.shuttleRepository.find({
       where,
     })
-
-    const shIdxs = shuttles.map((shuttle) => shuttle.sh_idx)
-    const query = this.shuttleTimeRepository
-      .createQueryBuilder('st')
-      .select([
-        'st.st_idx as st_idx',
-        'st.st_type as st_type',
-        'st.st_time as st_time',
-        'COUNT(sr.sr_idx) AS cnt',
-        'sr.sr_idx as sr_idx',
-        'sh.sh_idx as sh_idx',
-      ])
-      .innerJoin(Shuttle, 'sh')
-      .leftJoin(ShuttleReservation, 'sr', 'sr.shuttle_time_idx = st.st_idx AND sr.shuttle_idx = sh.sh_idx')
-      .andWhere('sh.sh_idx IN(:shIdxs)', { shIdxs })
-      .andWhere('st.company_idx = :company_idx', { company_idx: filter.company_idx })
-      .andWhere('sr.sr_meet_date is null OR sr.sr_meet_date = :date', { date: filter.date })
-      .groupBy('st.st_idx')
-      .addGroupBy('sh.sh_idx')
-      .addGroupBy('sr.sr_meet_date')
-    if (filter.st_type) {
-      query.andWhere('st.st_type = :st_type', { st_type: filter.st_type })
-    }
-    if (filter.sh_idx) {
-      query.andWhere('sh.sh_idx = :sh_idx', { sh_idx: filter.sh_idx })
-    }
-    if (filter.sh_state_in) {
-      query.andWhere('sh.sh_state in(:sh_state_in)', { sh_state_in: filter.sh_state_in })
-    }
-    const shuttleTimes = await query.getRawMany()
-
-    const shuttleTimesMap = new Map<number, any[]>()
-    shuttleTimes.forEach((shuttleTime) => {
-      if (!shuttleTimesMap.has(shuttleTime.sh_idx)) {
-        shuttleTimesMap.set(shuttleTime.sh_idx, [])
+    if (shuttles.length > 0) {
+      const shIdxs = shuttles.map((shuttle) => shuttle.sh_idx)
+      const query = this.shuttleTimeRepository
+        .createQueryBuilder('st')
+        .select([
+          'st.st_idx as st_idx',
+          'st.st_type as st_type',
+          'st.st_time as st_time',
+          'COUNT(sr.sr_idx) AS cnt',
+          'sr.sr_idx as sr_idx',
+          'sh.sh_idx as sh_idx',
+        ])
+        .innerJoin(Shuttle, 'sh')
+        .leftJoin(ShuttleReservation, 'sr', 'sr.shuttle_time_idx = st.st_idx AND sr.shuttle_idx = sh.sh_idx')
+        .andWhere('sh.sh_idx IN(:shIdxs)', { shIdxs })
+        .andWhere('st.company_idx = :company_idx', { company_idx: filter.company_idx })
+        .andWhere('sr.sr_meet_date is null OR sr.sr_meet_date = :date', { date: filter.date })
+        .groupBy('st.st_idx')
+        .addGroupBy('sh.sh_idx')
+        .addGroupBy('sr.sr_meet_date')
+      if (filter.st_type) {
+        query.andWhere('st.st_type = :st_type', { st_type: filter.st_type })
       }
-      if (shuttleTime.sh_idx == null) {
-        shuttleTime.cnt = 0
+      if (filter.sh_idx) {
+        query.andWhere('sh.sh_idx = :sh_idx', { sh_idx: filter.sh_idx })
       }
-      shuttleTimesMap.get(shuttleTime.sh_idx)?.push(shuttleTime)
-    })
-    const result = shuttles.map((shuttle) => ({
-      ...shuttle,
-      times: shuttleTimesMap.get(shuttle.sh_idx) || [],
-    }))
-    return result
+      if (filter.sh_state_in) {
+        query.andWhere('sh.sh_state in(:sh_state_in)', { sh_state_in: filter.sh_state_in })
+      }
+      const shuttleTimes = await query.getRawMany()
+
+      const shuttleTimesMap = new Map<number, any[]>()
+      shuttleTimes.forEach((shuttleTime) => {
+        if (!shuttleTimesMap.has(shuttleTime.sh_idx)) {
+          shuttleTimesMap.set(shuttleTime.sh_idx, [])
+        }
+        if (shuttleTime.sh_idx == null) {
+          shuttleTime.cnt = 0
+        }
+        shuttleTimesMap.get(shuttleTime.sh_idx)?.push(shuttleTime)
+      })
+      const result = shuttles.map((shuttle) => ({
+        ...shuttle,
+        times: shuttleTimesMap.get(shuttle.sh_idx) || [],
+      }))
+      shuttles = result
+    }
+
+    return shuttles
   }
 
   async findReservationByFilters(filter: ReservationStudentFilterDto) {
