@@ -4,6 +4,9 @@ import { ListDto } from 'src/common/paginateInfo.dto'
 export class CarFilterDto extends ListDto {
   @IsOptional()
   sh_idx: number
+
+  @IsOptional()
+  sh_state_in: number[] = [0, 1, 2]
 }
 
 export class EnterDriverDto {
@@ -81,6 +84,9 @@ export class ShuttleFilterDto extends ListDto {
 
   @IsOptional()
   sh_idx: number
+
+  @IsOptional()
+  sh_state_in: number[] = [0, 1, 2]
 }
 
 export class ReservationStudentFilterDto extends ListDto {

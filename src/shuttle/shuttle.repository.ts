@@ -163,6 +163,9 @@ export class ShuttleRepository {
     if (filter.sh_idx) {
       query.andWhere('sh.sh_idx = :sh_idx', { sh_idx: filter.sh_idx })
     }
+    if (filter.sh_state_in) {
+      query.andWhere('sh.sh_state IN(:sh_state_in)', { sh_state_in: filter.sh_state_in })
+    }
     // order 문
     if (filter.order == 'created_at') {
       query.orderBy('sh.created_at', filter.dir)
@@ -213,6 +216,9 @@ export class ShuttleRepository {
     }
     if (filter.sh_idx) {
       query.andWhere('sh.sh_idx = :sh_idx', { sh_idx: filter.sh_idx })
+    }
+    if (filter.sh_state_in) {
+      query.andWhere('sh.sh_state in(:sh_state_in)', { sh_state_in: filter.sh_state_in })
     }
     const shuttleTimes = await query.getRawMany()
 
@@ -311,7 +317,6 @@ export class ShuttleRepository {
       ...shuttle,
       areas: areaMap.get(shuttle.sh_idx) || [], // 해당하는 지역이 없으면 빈 배열
     }))
-    console.log(result)
     return result
   }
 
